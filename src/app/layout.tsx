@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/blocks/app-sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +35,28 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <SidebarProvider>
+          <div className="flex h-screen w-full">
+            <AppSidebar />
+            <main className="flex-1 flex flex-col">
+              <div className="flex-1 p-4 bg-white m-2 ml-0 rounded-2xl">
+                <div className="flex items-center justify-between mb-4">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SidebarTrigger />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="text-medium">Toggle sidebar <span className="inline-flex items-center gap-1 ml-1 bg-white/20 text-white px-1 py-0.25 rounded-sm font-medium border border-white/10">⌘ B</span></p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                {children}
+              </div>
+            </main>
+          </div>
+        </SidebarProvider>
       </body>
     </html>
   );
