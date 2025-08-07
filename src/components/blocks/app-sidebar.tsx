@@ -87,7 +87,7 @@ export function AppSidebar() {
               window.dispatchEvent(event);
             }}
             variant="ghost"
-            className="w-full justify-between bg-gray-900 border border-gray-800 hover:bg-gray-800 hover:text-gray-50 px-2 group-data-[collapsible=icon]:bg-gray-950 group-data-[collapsible=icon]:border-gray-950 group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:hover:bg-gray-900 group-data-[collapsible=icon]:hover:text-gray-50"
+            className="w-full justify-between bg-gray-950 border border-gray-800 hover:bg-gray-900 hover:text-gray-50 px-2 group-data-[collapsible=icon]:bg-gray-950 group-data-[collapsible=icon]:border-gray-950 group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:hover:bg-gray-900 group-data-[collapsible=icon]:hover:text-gray-50"
           >
             <span className="flex items-center gap-2">
               <Search className="h-4 w-4" />
