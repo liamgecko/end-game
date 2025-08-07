@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -48,7 +49,8 @@ import {
   PhoneCall,
   BookUser,
   Inbox,
-  ChevronRight
+  ChevronRight,
+  Search
 } from "lucide-react";
 
 export function AppSidebar() {
@@ -76,6 +78,29 @@ export function AppSidebar() {
       </SidebarHeader>
       
       <SidebarContent>
+        {/* Search Button */}
+        <div className="px-4 py-2">
+          <Button
+            onClick={() => {
+              // This will trigger the command dialog
+              const event = new CustomEvent('openSearch');
+              window.dispatchEvent(event);
+            }}
+            variant="ghost"
+            className="w-full justify-between bg-gray-900 border border-gray-800 hover:bg-gray-800 hover:text-gray-50 px-2 group-data-[collapsible=icon]:bg-gray-950 group-data-[collapsible=icon]:border-gray-950 group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:hover:bg-gray-900 group-data-[collapsible=icon]:hover:text-gray-50"
+          >
+            <span className="flex items-center gap-2">
+              <Search className="h-4 w-4" />
+              <span className="text-left font-normal transition-all duration-200 ease-in-out group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:overflow-hidden text-xs">
+                Search Gecko
+              </span>
+            </span>
+            <span className="pointer-events-none inline-flex select-none items-center gap-1 bg-gray-700 text-gray-300 px-1 py-0.25 rounded-sm font-medium !text-xs border border-gray-600 transition-all duration-200 ease-in-out group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:overflow-hidden">
+              ⌘ K
+            </span>
+          </Button>
+        </div>
+        
         <SidebarGroup>
           <SidebarGroupLabel>Platform</SidebarGroupLabel>
           <SidebarGroupContent>

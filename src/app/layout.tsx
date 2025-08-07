@@ -4,6 +4,7 @@ import "./globals.css";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/blocks/app-sidebar";
 import { AppTaskbar } from "@/components/blocks/app-taskbar";
+import { SearchCommand } from "@/components/blocks/search-command";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
               </div>
             </main>
           </div>
+          <SearchCommand />
         </SidebarProvider>
       </body>
     </html>

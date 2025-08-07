@@ -78,7 +78,7 @@ export function AppTaskbar() {
               <SidebarTrigger />
             </TooltipTrigger>
             <TooltipContent>
-              <p className="text-medium">Toggle sidebar <span className="inline-flex items-center gap-1 ml-1 bg-white/20 text-white px-1 py-0.25 rounded-sm font-medium border border-white/10">⌘ B</span></p>
+              <p className="text-medium">Toggle sidebar <span className="inline-flex items-center gap-1 ml-1 bg-gray-700 text-gray-300 px-1 py-0.25 rounded-sm font-medium border border-gray-600">⌘ B</span></p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
