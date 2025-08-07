@@ -129,9 +129,9 @@ export function AppSidebar() {
                        </DropdownMenuItem>
                        <DropdownMenuItem asChild>
                          <Link 
-                           href="/forms/my-forms" 
+                           href="/forms/forms-overview" 
                            className={`flex items-center ${
-                             isActive("/forms/my-forms") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
+                             isActive("/forms/forms-overview") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
                            }`}
                          >
                            <span>Forms overview</span>
@@ -140,9 +140,9 @@ export function AppSidebar() {
                        <DropdownMenuLabel className="mt-2">Settings</DropdownMenuLabel>
                        <DropdownMenuItem asChild>
                          <Link 
-                           href="/forms/contact-fields" 
+                           href="/settings/contact-fields" 
                            className={`flex items-center ${
-                             isActive("/forms/contact-fields") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
+                             isActive("/settings/contact-fields") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
                            }`}
                          >
                            <span>Contact fields</span>
@@ -150,9 +150,9 @@ export function AppSidebar() {
                        </DropdownMenuItem>
                        <DropdownMenuItem asChild>
                          <Link 
-                           href="/forms/field-options" 
+                           href="/settings/field-options" 
                            className={`flex items-center ${
-                             isActive("/forms/field-options") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
+                             isActive("/settings/field-options") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
                            }`}
                          >
                            <span>Field options</span>
@@ -172,7 +172,7 @@ export function AppSidebar() {
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/forms/my-forms" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/forms/forms-overview" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                             <span>Forms overview</span>
                           </Link>
                         </SidebarMenuSubButton>
@@ -185,14 +185,14 @@ export function AppSidebar() {
                           <SidebarMenu className="p-0">
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/forms/contact-fields" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/contact-fields" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Contact fields</span>
                                 </Link>
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/forms/field-options" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/field-options" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Field options</span>
                                 </Link>
                               </SidebarMenuButton>
@@ -233,28 +233,28 @@ export function AppSidebar() {
                          </Link>
                        </DropdownMenuItem>
                        <DropdownMenuItem asChild>
-                         <Link href="/events/my-events" className="flex items-center">
+                         <Link href="/events/events-overview" className="flex items-center">
                            <span>Events overview</span>
                          </Link>
                        </DropdownMenuItem>
                        <DropdownMenuLabel className="mt-2">Settings</DropdownMenuLabel>
                        <DropdownMenuItem asChild>
-                         <Link href="/events/hosts" className="flex items-center">
+                         <Link href="/settings/hosts" className="flex items-center">
                            <span>Hosts</span>
                          </Link>
                        </DropdownMenuItem>
                        <DropdownMenuItem asChild>
-                         <Link href="/events/locations" className="flex items-center">
+                         <Link href="/settings/locations" className="flex items-center">
                            <span>Locations</span>
                          </Link>
                        </DropdownMenuItem>
                        <DropdownMenuItem asChild>
-                         <Link href="/events/share" className="flex items-center">
+                         <Link href="/settings/share" className="flex items-center">
                            <span>Share events</span>
                          </Link>
                        </DropdownMenuItem>
                        <DropdownMenuItem asChild>
-                         <Link href="/events/deleted" className="flex items-center">
+                         <Link href="/settings/deleted" className="flex items-center">
                            <span>Deleted events</span>
                          </Link>
                        </DropdownMenuItem>
@@ -272,7 +272,7 @@ export function AppSidebar() {
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/events/my-events" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/events/events-overview" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                             <span>Events overview</span>
                           </Link>
                         </SidebarMenuSubButton>
@@ -285,28 +285,28 @@ export function AppSidebar() {
                           <SidebarMenu className="p-0">
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/events/hosts" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/hosts" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Hosts</span>
                                 </Link>
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/events/locations" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/locations" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Locations</span>
                                 </Link>
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/events/share" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/share" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Share events</span>
                                 </Link>
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/events/deleted" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/deleted" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Deleted events</span>
                                 </Link>
                               </SidebarMenuButton>
@@ -378,17 +378,17 @@ export function AppSidebar() {
                        </DropdownMenuItem>
                        <DropdownMenuLabel className="mt-2">Settings</DropdownMenuLabel>
                        <DropdownMenuItem asChild>
-                         <Link href="/conversations/users" className="flex items-center">
+                         <Link href="/settings/users" className="flex items-center">
                            <span>Users</span>
                          </Link>
                        </DropdownMenuItem>
                        <DropdownMenuItem asChild>
-                         <Link href="/conversations/teams" className="flex items-center">
+                         <Link href="/settings/teams" className="flex items-center">
                            <span>Teams</span>
                          </Link>
                        </DropdownMenuItem>
                        <DropdownMenuItem asChild>
-                         <Link href="/conversations/saved-replies" className="flex items-center">
+                         <Link href="/settings/saved-replies" className="flex items-center">
                            <span>Saved replies</span>
                          </Link>
                        </DropdownMenuItem>
@@ -454,21 +454,21 @@ export function AppSidebar() {
                           <SidebarMenu className="p-0">
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/conversations/users" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/users" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Users</span>
                                 </Link>
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/conversations/teams" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/teams" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Teams</span>
                                 </Link>
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/conversations/saved-replies" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/saved-replies" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Saved replies</span>
                                 </Link>
                               </SidebarMenuButton>
@@ -515,7 +515,7 @@ export function AppSidebar() {
                        </DropdownMenuItem>
                        <DropdownMenuLabel className="mt-2">Settings</DropdownMenuLabel>
                        <DropdownMenuItem asChild>
-                         <Link href="/broadcasts/templates" className="flex items-center">
+                         <Link href="/settings/templates" className="flex items-center">
                            <span>Email & SMS templates</span>
                          </Link>
                        </DropdownMenuItem>
@@ -546,7 +546,7 @@ export function AppSidebar() {
                           <SidebarMenu className="p-0">
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/broadcasts/templates" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/templates" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Email & SMS templates</span>
                                 </Link>
                               </SidebarMenuButton>
@@ -608,12 +608,12 @@ export function AppSidebar() {
                        </DropdownMenuItem>
                        <DropdownMenuLabel className="mt-2">Settings</DropdownMenuLabel>
                        <DropdownMenuItem asChild>
-                         <Link href="/calls/agents" className="flex items-center">
+                         <Link href="/settings/agents" className="flex items-center">
                            <span>Call agents</span>
                          </Link>
                        </DropdownMenuItem>
                        <DropdownMenuItem asChild>
-                         <Link href="/calls/numbers" className="flex items-center">
+                         <Link href="/settings/numbers" className="flex items-center">
                            <span>Numbers</span>
                          </Link>
                        </DropdownMenuItem>
@@ -665,14 +665,14 @@ export function AppSidebar() {
                           <SidebarMenu className="p-0">
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/calls/agents" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/agents" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Call agents</span>
                                 </Link>
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/calls/numbers" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/numbers" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Numbers</span>
                                 </Link>
                               </SidebarMenuButton>
@@ -729,12 +729,12 @@ export function AppSidebar() {
                        </DropdownMenuItem>
                        <DropdownMenuLabel className="mt-2">Settings</DropdownMenuLabel>
                        <DropdownMenuItem asChild>
-                         <Link href="/organisations/fields" className="flex items-center">
+                         <Link href="/settings/fields" className="flex items-center">
                            <span>Organisation fields</span>
                          </Link>
                        </DropdownMenuItem>
                        <DropdownMenuItem asChild>
-                         <Link href="/organisations/types" className="flex items-center">
+                         <Link href="/settings/types" className="flex items-center">
                            <span>Organisation types</span>
                          </Link>
                        </DropdownMenuItem>
@@ -758,14 +758,14 @@ export function AppSidebar() {
                           <SidebarMenu className="p-0">
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/organisations/fields" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/fields" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Organisation fields</span>
                                 </Link>
                               </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
                               <SidebarMenuButton asChild>
-                                <Link href="/organisations/types" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                                <Link href="/settings/types" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                                   <span>Organisation types</span>
                                 </Link>
                               </SidebarMenuButton>
@@ -856,8 +856,8 @@ export function AppSidebar() {
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/settings/user" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-                            <span>User settings</span>
+                          <Link href="/settings/user-management" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                            <span>User management</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
@@ -865,6 +865,34 @@ export function AppSidebar() {
                         <SidebarMenuSubButton asChild>
                           <Link href="/settings/data" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                             <span>Data management</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                      <SidebarMenuSubItem>
+                        <SidebarMenuSubButton asChild>
+                          <Link href="/settings/field-management" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                            <span>Field management</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                      <SidebarMenuSubItem>
+                        <SidebarMenuSubButton asChild>
+                          <Link href="/settings/call-sms" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                            <span>Call & SMS settings</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                      <SidebarMenuSubItem>
+                        <SidebarMenuSubButton asChild>
+                          <Link href="/settings/chat" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                            <span>Chat settings</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                      <SidebarMenuSubItem>
+                        <SidebarMenuSubButton asChild>
+                          <Link href="/settings/portal" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                            <span>Portal settings</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
