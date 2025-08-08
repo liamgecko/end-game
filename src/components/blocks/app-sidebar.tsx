@@ -50,7 +50,8 @@ import {
   BookUser,
   Inbox,
   ChevronRight,
-  Search
+  Search,
+  Star
 } from "lucide-react";
 
 export function AppSidebar() {
@@ -58,10 +59,76 @@ export function AppSidebar() {
   const isCollapsed = state === "collapsed";
   const pathname = usePathname();
   
+  // Favorites state
+  const [favorites, setFavorites] = React.useState<Array<{
+    title: string;
+    href: string;
+    icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  }>>([]);
+  
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
+  
+  // Add current page to favorites
+  const addToFavorites = () => {
+    const currentPage = {
+      title: getPageTitle(pathname),
+      href: pathname,
+      icon: getPageIcon(pathname),
+    };
+    
+    if (!favorites.some(fav => fav.href === pathname)) {
+      setFavorites(prev => [...prev, currentPage]);
+    }
+  };
+  
+  // Remove current page from favorites
+  const removeFromFavorites = () => {
+    setFavorites(prev => prev.filter(fav => fav.href !== pathname));
+  };
+  
+  // Get page title based on pathname
+  const getPageTitle = (path: string) => {
+    const segments = path.split('/').filter(Boolean);
+    if (segments.length === 0) return 'Overview';
+    
+    const lastSegment = segments[segments.length - 1];
+    return lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1).replace(/-/g, ' ');
+  };
+  
+  // Get page icon based on pathname
+  const getPageIcon = (path: string) => {
+    if (path.startsWith('/forms')) return ClipboardList;
+    if (path.startsWith('/events')) return CalendarFold;
+    if (path.startsWith('/conversations')) return MessageSquareText;
+    if (path.startsWith('/broadcasts')) return Megaphone;
+    if (path.startsWith('/calls')) return PhoneCall;
+    if (path.startsWith('/organisations')) return Building;
+    if (path.startsWith('/settings')) return Settings;
+    if (path.startsWith('/overview')) return Home;
+    return Home; // default
+  };
+  
+  // Listen for addToFavorites event
+  React.useEffect(() => {
+    const handleAddToFavorites = () => {
+      addToFavorites();
+    };
+    
+    const handleRemoveFromFavorites = () => {
+      removeFromFavorites();
+    };
+    
+    window.addEventListener('addToFavorites', handleAddToFavorites);
+    window.addEventListener('removeFromFavorites', handleRemoveFromFavorites);
+    
+    return () => {
+      window.removeEventListener('addToFavorites', handleAddToFavorites);
+      window.removeEventListener('removeFromFavorites', handleRemoveFromFavorites);
+    };
+  }, [pathname]); // Re-run when pathname changes
   
   return (
     <Sidebar className="border-none" collapsible="icon">
@@ -91,7 +158,7 @@ export function AppSidebar() {
           >
             <span className="flex items-center gap-2">
               <Search className="h-4 w-4" />
-              <span className="text-left font-normal transition-all duration-200 ease-in-out group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:overflow-hidden text-xs">
+              <span className="text-left font-normal transition-all duration-200 ease-in-out group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:overflow-hidden text-[13px]">
                 Search Gecko
               </span>
             </span>
@@ -100,6 +167,31 @@ export function AppSidebar() {
             </span>
           </Button>
         </div>
+        
+        {/* Favourites Section */}
+        {favorites.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Favourites</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {favorites.map((favorite, index) => (
+                  <SidebarMenuItem key={index}>
+                    <SidebarMenuButton asChild>
+                      <Link 
+                        href={favorite.href}
+                        className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                          isActive(favorite.href) ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
+                        }`}
+                      >
+                        <span>{favorite.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
         
         <SidebarGroup>
           <SidebarGroupLabel>Platform</SidebarGroupLabel>

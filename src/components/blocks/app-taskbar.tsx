@@ -28,7 +28,8 @@ import {
   PhoneCall,
   Home,
   MessageSquareOff,
-  PhoneOff
+  PhoneOff,
+  Star
 } from "lucide-react";
 
 interface BreadcrumbItem {
@@ -44,6 +45,12 @@ export function AppTaskbar() {
   // Availability state
   const [conversationsAvailable, setConversationsAvailable] = React.useState(true);
   const [callsAvailable, setCallsAvailable] = React.useState(true);
+  
+  // Favorites state - this should be shared with sidebar, but for now we'll manage it here
+  const [favorites, setFavorites] = React.useState<string[]>([]);
+  
+  // Check if current page is favorited
+  const isFavorited = favorites.includes(pathname);
   
   // Generate breadcrumbs based on current path
   const generateBreadcrumbs = (): BreadcrumbItem[] => {
@@ -77,7 +84,7 @@ export function AppTaskbar() {
             <TooltipTrigger asChild>
               <SidebarTrigger />
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent sideOffset={5}>
               <p className="text-medium">Toggle sidebar <span className="inline-flex items-center gap-1 ml-1 bg-gray-700 text-gray-300 px-1 py-0.25 rounded-sm font-medium border border-gray-600">⌘ B</span></p>
             </TooltipContent>
           </Tooltip>
@@ -118,6 +125,38 @@ export function AppTaskbar() {
       
       {/* Right Section - Controls */}
       <div className="flex items-center gap-2">
+        {/* Star Button */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button 
+                onClick={() => {
+                  if (isFavorited) {
+                    setFavorites(prev => prev.filter(fav => fav !== pathname));
+                    const event = new CustomEvent('removeFromFavorites');
+                    window.dispatchEvent(event);
+                  } else {
+                    setFavorites(prev => [...prev, pathname]);
+                    const event = new CustomEvent('addToFavorites');
+                    window.dispatchEvent(event);
+                  }
+                }}
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-gray-300 hover:text-gray-50 hover:bg-gray-800 size-7 rounded-sm mr-2 cursor-pointer"
+              >
+                <Star className={`h-4 w-4 ${isFavorited ? 'fill-current' : ''}`} strokeWidth={1.5} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent sideOffset={5}>
+              <p className="text-medium">
+                {isFavorited ? 'Remove from favourites' : 'Add to favourites'} 
+                <span className="inline-flex items-center gap-1 ml-1 bg-gray-700 text-gray-300 px-1 py-0.25 rounded-sm font-medium border border-gray-600">⌘ F</span>
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <Separator orientation="vertical" className="!h-6 bg-gray-700 mr-2" />
+
         {/* Conversations */}
         <TooltipProvider>
           <Tooltip>
@@ -138,7 +177,7 @@ export function AppTaskbar() {
                 </Toggle>
               </div>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent sideOffset={5}>
               <p>
                 {conversationsAvailable 
                   ? "Currently available for conversations" 
@@ -169,7 +208,7 @@ export function AppTaskbar() {
                 </Toggle>
               </div>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent sideOffset={5}>
               <p>
                 {callsAvailable 
                   ? "Currently available for calls" 

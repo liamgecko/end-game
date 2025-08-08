@@ -25,6 +25,19 @@ import {
   BookUser,
   Inbox,
   Search,
+  Clock,
+  Navigation,
+  Users,
+  FileText,
+  Calendar,
+  MessageSquare,
+  Phone,
+  Building2,
+  Cog,
+  User,
+  Database,
+  MessageCircle,
+  Globe2,
 } from "lucide-react";
 
 const searchItems = [
@@ -102,6 +115,74 @@ const searchItems = [
   },
 ];
 
+// Recently viewed items (you can make this dynamic based on user activity)
+const recentlyViewedItems = [
+  {
+    title: "Gecko Open Day 2025",
+    href: "/events/gecko-open-day-2025",
+  },
+  {
+    title: "Open Day Registration Form",
+    href: "/forms/open-day-registration",
+  },
+  {
+    title: "Conversation with Jonny Urquhart",
+    href: "/conversations/jonny-urquhart",
+  },
+];
+
+// Navigation items organized by category
+const navigationItems = {
+  forms: [
+    {
+      title: "Forms",
+      href: "/forms",
+      icon: ClipboardList,
+      shortcut: "F",
+    },
+  ],
+  events: [
+    {
+      title: "Events",
+      href: "/events",
+      icon: CalendarFold,
+      shortcut: "E",
+    },
+  ],
+  conversations: [
+    {
+      title: "Conversations",
+      href: "/conversations",
+      icon: MessageSquareText,
+      shortcut: "C",
+    },
+  ],
+  broadcasts: [
+    {
+      title: "Broadcasts",
+      href: "/broadcasts",
+      icon: Megaphone,
+      shortcut: "B",
+    },
+  ],
+  calls: [
+    {
+      title: "Calls",
+      href: "/calls",
+      icon: PhoneCall,
+      shortcut: "A",
+    },
+  ],
+  landingPages: [
+    {
+      title: "Landing pages",
+      href: "/landing-pages",
+      icon: Globe,
+      shortcut: "L",
+    },
+  ],
+};
+
 export function SearchCommand() {
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
@@ -137,26 +218,49 @@ export function SearchCommand() {
       <CommandInput placeholder="Search pages, settings, and more..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Pages">
-          {searchItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <CommandItem
-                key={item.href}
-                value={item.title}
-                onSelect={() => runCommand(() => router.push(item.href))}
-              >
-                <Icon className="mr-2 h-4 w-4" />
-                <div>
-                  <div className="font-medium">{item.title}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {item.description}
-                  </div>
-                </div>
-              </CommandItem>
-            );
-          })}
+        
+        {/* Recently viewed section */}
+        <CommandGroup heading="Recently viewed">
+          {recentlyViewedItems.map((item) => (
+            <CommandItem
+              key={item.href}
+              value={item.title}
+              onSelect={() => runCommand(() => router.push(item.href))}
+            >
+              <div>
+                <div className="font-medium">{item.title}</div>
+              </div>
+            </CommandItem>
+          ))}
         </CommandGroup>
+
+        {/* Navigation sections */}
+        <CommandGroup heading="Navigation">
+          {Object.entries(navigationItems).map(([category, items]) => (
+            <div key={category}>
+              {items.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <CommandItem
+                    key={item.href}
+                    value={item.title}
+                    onSelect={() => runCommand(() => router.push(item.href))}
+                  >
+                    <Icon className="mr-2 h-4 w-4" />
+                    <div className="flex-1">
+                      <div className="font-medium">{item.title}</div>
+                    </div>
+                    <span className="pointer-events-none inline-flex select-none items-center gap-1 bg-gray-50 text-gray-500 px-1 py-0.25 rounded-sm font-medium !text-xs border border-gray-200">
+                      ⌘ {item.shortcut}
+                    </span>
+                  </CommandItem>
+                );
+              })}
+            </div>
+          ))}
+        </CommandGroup>
+
+
       </CommandList>
     </CommandDialog>
   );
