@@ -190,14 +190,14 @@ export function AppSidebar() {
                     <SidebarMenuSub className={isCollapsed ? "pointer-events-none" : ""}>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/forms/create" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/forms/create" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/forms/create") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Create new form</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/forms/forms-overview" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/forms/forms-overview" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/forms/forms-overview") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Forms overview</span>
                           </Link>
                         </SidebarMenuSubButton>
@@ -252,13 +252,13 @@ export function AppSidebar() {
                          <CalendarFold className="h-4 w-4" strokeWidth={1.5} />
                          <span>Events</span>
                        </DropdownMenuLabel>
-                       <DropdownMenuItem asChild>
-                         <Link href="/events/create" className="flex items-center">
+                        <DropdownMenuItem asChild>
+                          <Link href="/events/create" className={`flex items-center ${isActive("/events/create") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                            <span>Create new event</span>
                          </Link>
                        </DropdownMenuItem>
-                       <DropdownMenuItem asChild>
-                         <Link href="/events/events-overview" className="flex items-center">
+                        <DropdownMenuItem asChild>
+                          <Link href="/events/events-overview" className={`flex items-center ${isActive("/events/events-overview") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                            <span>Events overview</span>
                          </Link>
                        </DropdownMenuItem>
@@ -290,14 +290,14 @@ export function AppSidebar() {
                     <SidebarMenuSub className={isCollapsed ? "pointer-events-none" : ""}>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/events/create" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/events/create" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/events/create") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Create new event</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/events/events-overview" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/events/events-overview" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/events/events-overview") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Events overview</span>
                           </Link>
                         </SidebarMenuSubButton>
@@ -424,49 +424,49 @@ export function AppSidebar() {
                     <SidebarMenuSub className={isCollapsed ? "pointer-events-none" : ""}>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/conversations/inbox" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/conversations/inbox" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/conversations/inbox") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Inbox</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/conversations/knowledge-base" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/conversations/knowledge-base" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/conversations/knowledge-base") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Knowledge base</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/conversations/ai-agents" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/conversations/ai-agents" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/conversations/ai-agents") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>AI agents</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/conversations/widgets" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/conversations/widgets" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/conversations/widgets") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Widgets</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/conversations/channels" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/conversations/channels" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/conversations/channels") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Channels</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/conversations/workflows" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/conversations/workflows" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/conversations/workflows") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Workflows</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/conversations/reporting" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/conversations/reporting" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/conversations/reporting") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Reporting</span>
                           </Link>
                         </SidebarMenuSubButton>
@@ -551,14 +551,14 @@ export function AppSidebar() {
                     <SidebarMenuSub className={isCollapsed ? "pointer-events-none" : ""}>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/broadcasts/create" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/broadcasts/create" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/broadcasts/create") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Create new campaign</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/broadcasts/campaigns" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/broadcasts/campaigns" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/broadcasts/campaigns") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Campaigns</span>
                           </Link>
                         </SidebarMenuSubButton>
@@ -649,35 +649,35 @@ export function AppSidebar() {
                     <SidebarMenuSub className={isCollapsed ? "pointer-events-none" : ""}>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/calls/campaigns" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/calls/campaigns" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/calls/campaigns") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Call overview</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/calls/history" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/calls/history" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/calls/history") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Call history</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/calls/campaigns" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/calls/campaigns" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/calls/campaigns") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Call campaigns</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/calls/scripts" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/calls/scripts" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/calls/scripts") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Call scripts</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/calls/reporting" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/calls/reporting" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/calls/reporting") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Reporting</span>
                           </Link>
                         </SidebarMenuSubButton>
@@ -770,7 +770,7 @@ export function AppSidebar() {
                     <SidebarMenuSub className={isCollapsed ? "pointer-events-none" : ""}>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/organisations/list" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/organisations/list" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/organisations/list") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Overview</span>
                           </Link>
                         </SidebarMenuSubButton>
@@ -867,56 +867,56 @@ export function AppSidebar() {
                     <SidebarMenuSub className={isCollapsed ? "pointer-events-none" : ""}>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/settings/all" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/settings/all" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/settings/all") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>All settings</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/settings/account" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/settings/account" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/settings/account") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Account settings</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/settings/user-management" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/settings/user-management" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/settings/user-management") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>User management</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/settings/data" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/settings/data" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/settings/data") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Data management</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/settings/field-management" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/settings/field-management" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/settings/field-management") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Field management</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/settings/call-sms" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/settings/call-sms" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/settings/call-sms") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Call & SMS settings</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/settings/chat" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/settings/chat" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/settings/chat") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Chat settings</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href="/settings/portal" className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Link href="/settings/portal" className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${isActive("/settings/portal") ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""}`}>
                             <span>Portal settings</span>
                           </Link>
                         </SidebarMenuSubButton>
