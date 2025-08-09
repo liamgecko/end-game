@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { AppSidebar } from "@/components/blocks/app-sidebar";
 import { AppTaskbar } from "@/components/blocks/app-taskbar";
 import { SearchCommand } from "@/components/blocks/search-command";
@@ -34,10 +35,14 @@ export default function RootLayout({
         <SidebarProvider>
           <div className="flex h-screen w-full">
             <AppSidebar />
-            <main className="flex-1 flex flex-col">
+            <main className="flex-1 flex flex-col bg-foreground overflow-hidden">
               <AppTaskbar />
-              <div className="flex-1 p-4 bg-white mr-2 mb-2 rounded-2xl">
-                {children}
+              <div className="flex-1 mr-2 mb-3 rounded-2xl bg-white overflow-hidden">
+                <ScrollArea className="h-full">
+                  <div className="p-6">
+                    {children}
+                  </div>
+                </ScrollArea>
               </div>
             </main>
           </div>

@@ -13,6 +13,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import {
   Sidebar,
@@ -23,6 +33,7 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
@@ -51,7 +62,10 @@ import {
   Inbox,
   ChevronRight,
   Search,
-  Star
+  Star,
+  MoreHorizontal,
+  Edit3,
+  Trash2
 } from "lucide-react";
 
 export function AppSidebar() {
@@ -61,10 +75,17 @@ export function AppSidebar() {
   
   // Favorites state
   const [favorites, setFavorites] = React.useState<Array<{
+    id: string;
     title: string;
+    originalTitle: string;
     href: string;
     icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
   }>>([]);
+
+  // Rename modal state
+  const [renameModalOpen, setRenameModalOpen] = React.useState(false);
+  const [selectedFavorite, setSelectedFavorite] = React.useState<{ id: string; title: string } | null>(null);
+  const [newTitle, setNewTitle] = React.useState("");
   
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -73,20 +94,91 @@ export function AppSidebar() {
   
   // Add current page to favorites
   const addToFavorites = () => {
+    // Check if we've reached the limit of 5 favorites
+    if (favorites.length >= 5) {
+      return; // Don't add if limit reached
+    }
+
+    const pageTitle = getPageTitle(pathname);
     const currentPage = {
-      title: getPageTitle(pathname),
+      id: pathname, // Use pathname as unique ID
+      title: pageTitle,
+      originalTitle: pageTitle,
       href: pathname,
       icon: getPageIcon(pathname),
     };
     
     if (!favorites.some(fav => fav.href === pathname)) {
-      setFavorites(prev => [...prev, currentPage]);
+      const newFavorites = [...favorites, currentPage];
+      setFavorites(newFavorites);
+      // Dispatch event to update taskbar with the current favorites list
+      const event = new CustomEvent('favoritesUpdated', { 
+        detail: { 
+          favorites: newFavorites.map(fav => fav.href),
+          favoritesCount: newFavorites.length
+        }
+      });
+      window.dispatchEvent(event);
     }
   };
   
   // Remove current page from favorites
   const removeFromFavorites = () => {
-    setFavorites(prev => prev.filter(fav => fav.href !== pathname));
+    const newFavorites = favorites.filter(fav => fav.href !== pathname);
+    setFavorites(newFavorites);
+    // Dispatch event to update taskbar with the current favorites list
+    const event = new CustomEvent('favoritesUpdated', { 
+      detail: { 
+        favorites: newFavorites.map(fav => fav.href),
+        favoritesCount: newFavorites.length
+      }
+    });
+    window.dispatchEvent(event);
+  };
+
+  // Remove specific favorite by id
+  const removeSpecificFavorite = (id: string) => {
+    const newFavorites = favorites.filter(fav => fav.id !== id);
+    setFavorites(newFavorites);
+    // Dispatch event to update taskbar with the current favorites list
+    const event = new CustomEvent('favoritesUpdated', { 
+      detail: { 
+        favorites: newFavorites.map(fav => fav.href),
+        favoritesCount: newFavorites.length
+      }
+    });
+    window.dispatchEvent(event);
+  };
+
+  // Rename specific favorite
+  const renameFavorite = (id: string, newTitle: string) => {
+    setFavorites(prev => prev.map(fav => 
+      fav.id === id ? { ...fav, title: newTitle } : fav
+    ));
+  };
+
+  // Open rename modal
+  const openRenameModal = (favorite: { id: string; title: string }) => {
+    setSelectedFavorite(favorite);
+    setNewTitle(favorite.title);
+    setRenameModalOpen(true);
+  };
+
+  // Handle save rename
+  const handleSaveRename = () => {
+    if (selectedFavorite && newTitle.trim() !== '') {
+      renameFavorite(selectedFavorite.id, newTitle.trim());
+      setRenameModalOpen(false);
+      setSelectedFavorite(null);
+      setNewTitle("");
+    }
+  };
+
+  // Handle cancel rename
+  const handleCancelRename = () => {
+    setRenameModalOpen(false);
+    setSelectedFavorite(null);
+    setNewTitle("");
   };
   
   // Get page title based on pathname
@@ -120,15 +212,28 @@ export function AppSidebar() {
     const handleRemoveFromFavorites = () => {
       removeFromFavorites();
     };
+
+    const handleRequestCurrentFavorites = () => {
+      // Send current favorites to taskbar
+      const event = new CustomEvent('favoritesUpdated', { 
+        detail: { 
+          favorites: favorites.map(fav => fav.href),
+          favoritesCount: favorites.length
+        }
+      });
+      window.dispatchEvent(event);
+    };
     
     window.addEventListener('addToFavorites', handleAddToFavorites);
     window.addEventListener('removeFromFavorites', handleRemoveFromFavorites);
+    window.addEventListener('requestCurrentFavorites', handleRequestCurrentFavorites);
     
     return () => {
       window.removeEventListener('addToFavorites', handleAddToFavorites);
       window.removeEventListener('removeFromFavorites', handleRemoveFromFavorites);
+      window.removeEventListener('requestCurrentFavorites', handleRequestCurrentFavorites);
     };
-  }, [pathname]); // Re-run when pathname changes
+  }, [pathname, favorites]); // Re-run when pathname or favorites change
   
   return (
     <Sidebar className="border-none" collapsible="icon">
@@ -174,18 +279,36 @@ export function AppSidebar() {
             <SidebarGroupLabel>Favourites</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {favorites.map((favorite, index) => (
-                  <SidebarMenuItem key={index}>
+                {favorites.map((favorite) => (
+                  <SidebarMenuItem key={favorite.id}>
                     <SidebarMenuButton asChild>
                       <Link 
                         href={favorite.href}
-                        className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
-                          isActive(favorite.href) ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
-                        }`}
+                        className="transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                       >
                         <span>{favorite.title}</span>
                       </Link>
                     </SidebarMenuButton>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <SidebarMenuAction showOnHover>
+                          <MoreHorizontal />
+                          <span className="sr-only">More</span>
+                        </SidebarMenuAction>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="min-w-48" side="right" align="start">
+                        <DropdownMenuItem
+                          onClick={() => openRenameModal({ id: favorite.id, title: favorite.title })}
+                        >
+                          Rename menu label
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => removeSpecificFavorite(favorite.id)}
+                        >
+                          Remove from favourites
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
@@ -1142,6 +1265,47 @@ export function AppSidebar() {
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarFooter>
+
+      {/* Rename Modal */}
+      <Dialog open={renameModalOpen} onOpenChange={setRenameModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Rename favourite</DialogTitle>
+            <DialogDescription>
+              Enter a new label for this favourite item.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="name">
+                New menu label
+              </Label>
+              <Input
+                id="name"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                placeholder="Enter new label..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSaveRename();
+                  } else if (e.key === 'Escape') {
+                    handleCancelRename();
+                  }
+                }}
+                autoFocus
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={handleCancelRename}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveRename} disabled={!newTitle.trim()}>
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Sidebar>
   );
 } 

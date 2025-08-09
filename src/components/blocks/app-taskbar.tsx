@@ -48,9 +48,13 @@ export function AppTaskbar() {
   
   // Favorites state - this should be shared with sidebar, but for now we'll manage it here
   const [favorites, setFavorites] = React.useState<string[]>([]);
+  const [favoritesCount, setFavoritesCount] = React.useState(0);
   
   // Check if current page is favorited
   const isFavorited = favorites.includes(pathname);
+  
+  // Check if favorites limit is reached and current page is not favorited
+  const isDisabled = favoritesCount >= 5 && !isFavorited;
   
   // Generate breadcrumbs based on current path
   const generateBreadcrumbs = (): BreadcrumbItem[] => {
@@ -75,8 +79,27 @@ export function AppTaskbar() {
   const breadcrumbs = generateBreadcrumbs();
   const isHomePage = pathname === "/overview";
   
+  // Listen for favorite changes from sidebar and request initial state
+  React.useEffect(() => {
+    const handleFavoritesUpdated = (event: CustomEvent) => {
+      const { favorites: updatedFavorites, favoritesCount: updatedCount } = event.detail;
+      setFavorites(updatedFavorites);
+      setFavoritesCount(updatedCount);
+    };
+    
+    // Request current favorites from sidebar when component mounts
+    const requestFavoritesEvent = new CustomEvent('requestCurrentFavorites');
+    window.dispatchEvent(requestFavoritesEvent);
+    
+    window.addEventListener('favoritesUpdated', handleFavoritesUpdated as EventListener);
+    
+    return () => {
+      window.removeEventListener('favoritesUpdated', handleFavoritesUpdated as EventListener);
+    };
+  }, []);
+  
   return (
-    <div className="flex items-center justify-between w-full pl-4 pr-6 py-1">
+    <div className="flex items-center justify-between w-full pl-4 pr-6 py-2">
       {/* Left Section - Sidebar Toggle and Breadcrumbs */}
       <div className="flex items-center gap-4">
         <TooltipProvider>
@@ -84,7 +107,7 @@ export function AppTaskbar() {
             <TooltipTrigger asChild>
               <SidebarTrigger />
             </TooltipTrigger>
-            <TooltipContent sideOffset={5}>
+            <TooltipContent sideOffset={0}>
               <p className="text-medium">Toggle sidebar <span className="inline-flex items-center gap-1 ml-1 bg-gray-700 text-gray-300 px-1 py-0.25 rounded-sm font-medium border border-gray-600">⌘ B</span></p>
             </TooltipContent>
           </Tooltip>
@@ -131,25 +154,34 @@ export function AppTaskbar() {
             <TooltipTrigger asChild>
               <button 
                 onClick={() => {
+                  if (isDisabled) return; // Don't do anything if disabled
+                  
                   if (isFavorited) {
-                    setFavorites(prev => prev.filter(fav => fav !== pathname));
                     const event = new CustomEvent('removeFromFavorites');
                     window.dispatchEvent(event);
                   } else {
-                    setFavorites(prev => [...prev, pathname]);
                     const event = new CustomEvent('addToFavorites');
                     window.dispatchEvent(event);
                   }
                 }}
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-gray-300 hover:text-gray-50 hover:bg-gray-800 size-7 rounded-sm mr-2 cursor-pointer"
+                className={`inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 size-7 rounded-sm mr-2 ${
+                  isDisabled ? 'text-gray-400 cursor-not-allowed opacity-75' : 'text-gray-300 hover:text-gray-50 hover:bg-gray-800 cursor-pointer'
+                }`}
               >
                 <Star className={`h-4 w-4 ${isFavorited ? 'fill-current' : ''}`} strokeWidth={1.5} />
               </button>
             </TooltipTrigger>
-            <TooltipContent sideOffset={5}>
+            <TooltipContent sideOffset={0}>
               <p className="text-medium">
-                {isFavorited ? 'Remove from favourites' : 'Add to favourites'} 
-                <span className="inline-flex items-center gap-1 ml-1 bg-gray-700 text-gray-300 px-1 py-0.25 rounded-sm font-medium border border-gray-600">⌘ F</span>
+                {isDisabled 
+                  ? 'Maximum of 5 favourites reached' 
+                  : isFavorited 
+                    ? 'Remove from favourites' 
+                    : 'Add to favourites'
+                } 
+                {!isDisabled && (
+                  <span className="inline-flex items-center gap-1 ml-1 bg-gray-700 text-gray-300 px-1 py-0.25 rounded-sm font-medium border border-gray-600">⌘ F</span>
+                )}
               </p>
             </TooltipContent>
           </Tooltip>
@@ -177,7 +209,7 @@ export function AppTaskbar() {
                 </Toggle>
               </div>
             </TooltipTrigger>
-            <TooltipContent sideOffset={5}>
+            <TooltipContent sideOffset={0}>
               <p>
                 {conversationsAvailable 
                   ? "Currently available for conversations" 
@@ -208,7 +240,7 @@ export function AppTaskbar() {
                 </Toggle>
               </div>
             </TooltipTrigger>
-            <TooltipContent sideOffset={5}>
+            <TooltipContent sideOffset={0}>
               <p>
                 {callsAvailable 
                   ? "Currently available for calls" 
