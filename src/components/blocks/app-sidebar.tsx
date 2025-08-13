@@ -65,7 +65,8 @@ import {
   Star,
   MoreHorizontal,
   Edit3,
-  Trash2
+  Trash2,
+  Zap
 } from "lucide-react";
 
 export function AppSidebar() {
@@ -778,7 +779,7 @@ export function AppSidebar() {
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
-                      
+
                       {/* Settings Group */}
                       <SidebarGroup className="p-0">
                         <SidebarGroupLabel className="px-2">Settings</SidebarGroupLabel>
@@ -924,6 +925,21 @@ export function AppSidebar() {
                   </CollapsibleContent>
                 </SidebarMenuItem>
               </Collapsible>
+
+              {/* Landing pages */}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link 
+                    href="/ai-and-automation" 
+                    className={`transition-all duration-200 ease-in-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground ${
+                      pathname === "/ai-and-automation" ? "bg-sidebar-accent text-sidebar-accent-foreground" : ""
+                    }`}
+                  >
+                    <Zap className="h-4 w-4 transition-colors duration-200 ease-in-out" strokeWidth={1.5} />
+                    <span>AI and automation</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
               {/* Landing pages */}
               <SidebarMenuItem>
