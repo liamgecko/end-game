@@ -39,9 +39,7 @@ export default function RootLayout({
               <AppTaskbar />
               <div className="flex-1 mr-2 mb-3 rounded-2xl bg-white overflow-hidden">
                 <ScrollArea className="h-full">
-                  <div className="p-6">
-                    {children}
-                  </div>
+                  {children}
                 </ScrollArea>
               </div>
             </main>
