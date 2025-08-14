@@ -32,6 +32,7 @@ export default function CreateConditionsPage() {
     }
   ])
 
+
   // Tool configuration options
   const toolOptions = [
     { value: "add_label_conversation", label: "Add a label to the conversation" },
@@ -105,6 +106,8 @@ export default function CreateConditionsPage() {
     return actionMap[toolType] || []
   }
 
+
+
   const toggleModule = (moduleId: string) => {
     setSelectedModules(prev => 
       prev.includes(moduleId) 
@@ -143,6 +146,8 @@ export default function CreateConditionsPage() {
       tool.id === toolId ? { ...tool, [field]: value } : tool
     ))
   }
+
+
 
   const handleSave = () => {
     // TODO: Implement save functionality

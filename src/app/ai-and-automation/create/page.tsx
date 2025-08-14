@@ -17,7 +17,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Save, Bot, Play, Sparkles, PlusCircle, PenLine, Shapes } from "lucide-react"
+import { Save, Bot, Play, Sparkles, PlusCircle, PenLine, Shapes, ArrowLeft } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
@@ -40,6 +40,8 @@ export default function CreateAIAgentPage() {
   const [slashMenuPosition, setSlashMenuPosition] = useState({ top: 0, left: 0 })
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [editingCommand, setEditingCommand] = useState<{ text: string; span: HTMLElement } | null>(null)
+  const [showToolOptions, setShowToolOptions] = useState(false)
+  const [selectedTool, setSelectedTool] = useState<string>("")
   const slashMenuRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLDivElement>(null)
 
@@ -243,6 +245,49 @@ export default function CreateAIAgentPage() {
     setEditingCommand(null)
   }
 
+  // Get tool-specific options for the nested view
+  const getToolSpecificOptions = (toolType: string) => {
+    const toolOptionsMap: { [key: string]: Array<{ value: string; label: string }> } = {
+      "Add a label": [
+        { value: "urgent", label: "Urgent" },
+        { value: "follow_up", label: "Follow Up" },
+        { value: "resolved", label: "Resolved" },
+        { value: "escalated", label: "Escalated" },
+        { value: "new_lead", label: "New Lead" }
+      ],
+      "Add a note": [
+        { value: "general_note", label: "General Note" },
+        { value: "meeting_notes", label: "Meeting Notes" },
+        { value: "follow_up_reminder", label: "Follow Up Reminder" },
+        { value: "customer_feedback", label: "Customer Feedback" }
+      ],
+      "Add contact to event": [
+        { value: "webinar", label: "Webinar" },
+        { value: "conference", label: "Conference" },
+        { value: "demo", label: "Demo" },
+        { value: "meeting", label: "Meeting" },
+        { value: "workshop", label: "Workshop" }
+      ],
+      "Add contact to campaign": [
+        { value: "email_campaign", label: "Email Campaign" },
+        { value: "social_media", label: "Social Media" },
+        { value: "content_marketing", label: "Content Marketing" },
+        { value: "product_launch", label: "Product Launch" }
+      ]
+    }
+    return toolOptionsMap[toolType] || []
+  }
+
+  const handleToolSelect = (tool: string) => {
+    setSelectedTool(tool)
+    setShowToolOptions(true)
+  }
+
+  const goBackToTools = () => {
+    setShowToolOptions(false)
+    setSelectedTool("")
+  }
+
   // Handle click outside to close slash menu
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -409,16 +454,19 @@ export default function CreateAIAgentPage() {
                       {showSlashMenu && (
                         <div
                           ref={slashMenuRef}
-                          className="absolute w-64 max-h-64 overflow-y-auto bg-white border rounded-lg shadow-lg z-50"
+                          className="absolute w-80 max-h-96 overflow-y-auto bg-white border rounded-lg shadow-lg z-50"
                           style={{
                             position: 'fixed',
                             top: slashMenuPosition.top,
                             left: slashMenuPosition.left,
                           }}
                         >
-                          <div className="p-3 border-b">
-                            <div className="text-sm font-medium">Insert</div>
-                          </div>
+                          {!showToolOptions ? (
+                            // First level: Tool selection and other options
+                            <>
+                              <div className="p-3 border-b">
+                                <div className="text-sm font-medium">Insert</div>
+                              </div>
                           
                           {/* Tools */}
                           {(() => {
@@ -431,10 +479,11 @@ export default function CreateAIAgentPage() {
                                 {tools.map((item, index) => (
                                   <button
                                     key={index}
-                                    className="w-full text-left px-2 py-1.5 text-sm hover:bg-gray-100 rounded-sm"
-                                    onClick={() => insertSlashCommand(item)}
+                                    className="w-full text-left px-2 py-1.5 text-sm hover:bg-gray-100 rounded-sm flex items-center justify-between"
+                                    onClick={() => handleToolSelect(item)}
                                   >
-                                    {item}
+                                    <span>{item}</span>
+                                    <span className="text-gray-400">→</span>
                                   </button>
                                 ))}
                               </div>
@@ -548,7 +597,35 @@ export default function CreateAIAgentPage() {
                                 <div className="text-sm text-muted-foreground">No results found</div>
                               </div>
                             ) : null;
-                          })()}
+                                                      })()}
+                            </>
+                          ) : (
+                            // Second level: Tool-specific options
+                            <>
+                              <div className="p-3 border-b bg-gray-50">
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    onClick={goBackToTools}
+                                    className="p-1 hover:bg-gray-200 rounded"
+                                  >
+                                    <ArrowLeft className="h-4 w-4" />
+                                  </button>
+                                  <div className="text-sm font-medium">{selectedTool}</div>
+                                </div>
+                              </div>
+                              <div className="p-1">
+                                {getToolSpecificOptions(selectedTool).map((option) => (
+                                  <button
+                                    key={option.value}
+                                    className="w-full text-left px-2 py-1.5 text-sm hover:bg-gray-100 rounded-sm"
+                                    onClick={() => insertSlashCommand(`${selectedTool}: ${option.label}`)}
+                                  >
+                                    {option.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </>
+                          )}
                         </div>
                       )}
                   </div>
