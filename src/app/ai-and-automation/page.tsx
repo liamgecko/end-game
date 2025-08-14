@@ -100,7 +100,7 @@ export type AIAgent = {
   }
 }
 
-export const columns: ColumnDef<AIAgent>[] = [
+const columns: ColumnDef<AIAgent>[] = [
   {
     id: "select",
     header: ({ table }) => (

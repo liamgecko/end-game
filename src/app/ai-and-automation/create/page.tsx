@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Save, Bot, Play, Sparkles, PlusCircle, Tag, Square, MessageSquare, BookOpen, Pencil, PenLine, Shapes } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 // Available modules for AI agents
 const AVAILABLE_MODULES = [
@@ -551,13 +552,24 @@ export default function CreateAIAgentPage() {
                         </div>
                       )}
                   </div>
-                  <div className="bg-gray-50 px-2 py-1 rounded-b-sm">
+                  <div className="bg-gray-50 px-2 py-1 rounded-b-sm flex items-center justify-between">
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="iconSm">
-                          <PlusCircle className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="iconSm">
+                            <PlusCircle className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Insert a command</p>
+                        </TooltipContent>
+                      </Tooltip>
+                      
                       <DropdownMenuContent className="w-64" align="start">
                         <DropdownMenuLabel>Insert</DropdownMenuLabel>
                         <DropdownMenuSeparator />
@@ -630,6 +642,10 @@ export default function CreateAIAgentPage() {
                         </DropdownMenuSub>
                       </DropdownMenuContent>
                     </DropdownMenu>
+                    
+                    <span className="text-xs text-muted-foreground">
+                      Type <span className="font-semibold py-0.5 px-2 bg-gray-100 border border-gray-200 rounded-sm">/</span> to insert commands
+                    </span>
                   </div>
                  </div>
               </div>
