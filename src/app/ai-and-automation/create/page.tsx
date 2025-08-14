@@ -17,7 +17,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Save, Bot, Play, Sparkles, PlusCircle, PenLine, Shapes, ArrowLeft } from "lucide-react"
+import { Save, Bot, Play, Sparkles, PlusCircle, PenLine, Shapes, ArrowLeft, AtSign, X } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
@@ -31,6 +31,15 @@ const AVAILABLE_MODULES = [
   { id: "calls", name: "Calls", description: "Call logs and telephony data" }
 ]
 
+// Sample AI agents for @ mentions (in a real app, this would come from the database)
+const SAMPLE_AI_AGENTS = [
+  { id: "1", name: "Chat agent", description: "Handles general chat and conversation", type: "Chat" },
+  { id: "2", name: "Events agent", description: "Manages events and event-related inquiries", type: "Events" },
+  { id: "3", name: "Marketing agent", description: "Handles marketing campaigns and promotions", type: "Marketing" },
+  { id: "4", name: "Finance agent", description: "Manages financial inquiries and assistance", type: "Finance" },
+  { id: "5", name: "Admissions agent", description: "Handles admissions and enrollment questions", type: "Admissions" }
+]
+
 export default function CreateAIAgentPage() {
   const [selectedModules, setSelectedModules] = useState<string[]>([])
   const [prompt, setPrompt] = useState("")
@@ -42,6 +51,9 @@ export default function CreateAIAgentPage() {
   const [editingCommand, setEditingCommand] = useState<{ text: string; span: HTMLElement } | null>(null)
   const [showToolOptions, setShowToolOptions] = useState(false)
   const [selectedTool, setSelectedTool] = useState<string>("")
+  const [showAgentMention, setShowAgentMention] = useState(false)
+  const [agentMentionQuery, setAgentMentionQuery] = useState("")
+  const [showPromptTips, setShowPromptTips] = useState(true)
   const slashMenuRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLDivElement>(null)
 
@@ -72,7 +84,7 @@ export default function CreateAIAgentPage() {
     const value = target.innerText || target.textContent || ""
     setPrompt(value)
     
-    // Check for slash command
+    // Check for slash command or @ mention
     const selection = window.getSelection()
     if (!selection) return
     
@@ -154,9 +166,78 @@ export default function CreateAIAgentPage() {
       
       setShowSlashMenu(true)
       setSlashQuery(lastWord.slice(1))
+      setShowAgentMention(false) // Close agent mention if open
+    } else if (lastWord.startsWith("@")) {
+      // Only calculate position if menu wasn't already open
+      if (!showAgentMention) {
+        // Calculate position for the agent mention menu
+        const textarea = target
+        
+        // Create a temporary span to measure text width
+        const span = document.createElement('span')
+        span.style.font = window.getComputedStyle(textarea).font
+        span.style.visibility = 'hidden'
+        span.style.position = 'absolute'
+        span.style.whiteSpace = 'pre'
+        span.textContent = textBeforeCursor
+        document.body.appendChild(span)
+        
+        const textWidth = span.offsetWidth
+        document.body.removeChild(span)
+        
+        // Calculate position relative to textarea
+        const textareaRect = textarea.getBoundingClientRect()
+        const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight) || 20
+        
+        // Calculate position relative to viewport
+        const top = textareaRect.top + 40
+        
+        // Calculate the exact position of the "@" character
+        const left = textareaRect.left + textWidth
+        
+        // Ensure dropdown doesn't go off-screen
+        const viewportWidth = window.innerWidth
+        const viewportHeight = window.innerHeight
+        const dropdownWidth = 320 // w-80 = 20rem = 320px
+        const dropdownHeight = 384 // max-h-96 = 24rem = 384px
+        
+        let adjustedLeft = left
+        let adjustedTop = top
+        
+        // Check right boundary
+        if (left + dropdownWidth > viewportWidth) {
+          adjustedLeft = viewportWidth - dropdownWidth - 20
+        }
+        
+        // Check bottom boundary
+        if (top + dropdownHeight > viewportHeight) {
+          adjustedTop = top - dropdownHeight - 20
+        }
+        
+        // Check left boundary
+        if (adjustedLeft < 20) {
+          adjustedLeft = 20
+        }
+        
+        // Check top boundary
+        if (adjustedTop < 20) {
+          adjustedTop = 20
+        }
+        
+        setSlashMenuPosition({
+          top: adjustedTop,
+          left: adjustedLeft
+        })
+      }
+      
+      setShowAgentMention(true)
+      setAgentMentionQuery(lastWord.slice(1))
+      setShowSlashMenu(false) // Close slash menu if open
     } else {
       setShowSlashMenu(false)
       setSlashQuery("")
+      setShowAgentMention(false)
+      setAgentMentionQuery("")
     }
   }
 
@@ -273,6 +354,11 @@ export default function CreateAIAgentPage() {
         { value: "social_media", label: "Social Media" },
         { value: "content_marketing", label: "Content Marketing" },
         { value: "product_launch", label: "Product Launch" }
+      ],
+      "Assign to a chatbot": [
+        { value: "financial_aid_bot", label: "Financial aid bot" },
+        { value: "events_bot", label: "Events bot" },
+        { value: "admissions_bot", label: "Admissions bot" }
       ]
     }
     return toolOptionsMap[toolType] || []
@@ -288,7 +374,60 @@ export default function CreateAIAgentPage() {
     setSelectedTool("")
   }
 
-  // Handle click outside to close slash menu
+  const handleAgentMention = (agent: { id: string; name: string; description: string; type: string }) => {
+    if (!textareaRef.current) return
+    
+    const selection = window.getSelection()
+    if (!selection) return
+    
+    const range = selection.getRangeAt(0)
+    const node = range.startContainer
+    const nodeText = node.textContent || ""
+    const nodeOffset = range.startOffset
+    
+    // Find the "@" character before the cursor in this node
+    const textBeforeCursor = nodeText.substring(0, nodeOffset)
+    const atIndex = textBeforeCursor.lastIndexOf('@')
+    
+    if (atIndex !== -1) {
+      // Remove the "@" and any text after it on the same line
+      const newText = nodeText.substring(0, atIndex)
+      if (node.nodeType === Node.TEXT_NODE) {
+        node.textContent = newText
+      }
+      
+      // Create a span with special styling for the agent mention
+      const span = document.createElement('span')
+      span.textContent = `@${agent.name}`
+      span.className = 'bg-gray-50 text-gray-900 px-1 py-0.5 rounded text-sm border border-gray-200'
+      span.contentEditable = 'false'
+      span.dataset.agentId = agent.id
+      span.dataset.agentName = agent.name
+      span.title = `${agent.type}: ${agent.description}`
+      
+      // Insert the span after the current node
+      const parent = node.parentNode
+      if (parent) {
+        parent.insertBefore(span, node.nextSibling)
+        
+        // Add a space after the mention
+        const space = document.createTextNode(' ')
+        parent.insertBefore(space, span.nextSibling)
+        
+        // Set cursor after the space
+        const newRange = document.createRange()
+        newRange.setStartAfter(space)
+        newRange.collapse(true)
+        selection.removeAllRanges()
+        selection.addRange(newRange)
+      }
+    }
+    
+    setShowAgentMention(false)
+    setAgentMentionQuery("")
+  }
+
+  // Handle click outside to close slash menu and agent mention menu
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -299,17 +438,19 @@ export default function CreateAIAgentPage() {
       ) {
         setShowSlashMenu(false)
         setSlashQuery("")
+        setShowAgentMention(false)
+        setAgentMentionQuery("")
       }
     }
 
-    if (showSlashMenu) {
+    if (showSlashMenu || showAgentMention) {
       document.addEventListener('mousedown', handleClickOutside)
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [showSlashMenu])
+  }, [showSlashMenu, showAgentMention])
 
   // Update slash query when prompt changes to enable real-time filtering
   useEffect(() => {
@@ -470,7 +611,7 @@ export default function CreateAIAgentPage() {
                           
                           {/* Tools */}
                           {(() => {
-                            const tools = ["Add a label", "Add a note", "Add contact to event", "Add contact to campaign"].filter(item => 
+                            const tools = ["Add a label", "Add a note", "Add contact to event", "Add contact to campaign", "Assign to a chatbot"].filter(item => 
                               item.toLowerCase().includes(slashQuery.toLowerCase())
                             );
                             return tools.length > 0 ? (
@@ -628,116 +769,212 @@ export default function CreateAIAgentPage() {
                           )}
                         </div>
                       )}
+                      
+                      {/* Agent Mention Menu */}
+                      {showAgentMention && (
+                        <div
+                          className="absolute w-80 max-h-96 overflow-y-auto bg-white border rounded-lg shadow-lg z-50"
+                          style={{
+                            position: 'fixed',
+                            top: slashMenuPosition.top,
+                            left: slashMenuPosition.left,
+                          }}
+                        >
+
+                          
+
+                          
+                          <div className="p-3 border-b">
+                            <div className="text-sm font-medium">Mention AI agents</div>
+                          </div>
+                          
+                          <div className="p-1">
+                            {(() => {
+                              const filteredAgents = SAMPLE_AI_AGENTS.filter(agent => 
+                                agent.name.toLowerCase().includes(agentMentionQuery.toLowerCase())
+                              );
+                              
+                              if (filteredAgents.length === 0 && agentMentionQuery.length > 0) {
+                                return (
+                                  <div className="p-3">
+                                    <div className="text-sm text-muted-foreground">No results found</div>
+                                  </div>
+                                );
+                              }
+                              
+                              return filteredAgents.map((agent) => (
+                                <button
+                                  key={agent.id}
+                                  className="w-full text-left px-2 py-1.5 text-sm hover:bg-gray-100 rounded-sm"
+                                  onClick={() => handleAgentMention(agent)}
+                                >
+                                  {agent.name}
+                                </button>
+                              ));
+                            })()}
+                          </div>
+                        </div>
+                      )}
                   </div>
                   <div className="bg-gray-50 px-2 py-1 rounded-b-sm flex items-center justify-between">
-                    <DropdownMenu>
+                    <div className="flex items-center gap-2">
+                      <DropdownMenu>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="iconSm">
+                                <PlusCircle className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Insert a command</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        
+                        <DropdownMenuContent className="w-64" align="start">
+                          <DropdownMenuLabel>Insert</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          
+                          {/* Tools */}
+                          <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>
+                              <span>Tools</span>
+                            </DropdownMenuSubTrigger>
+                            <DropdownMenuSubContent>
+                              <DropdownMenuItem>AI assistant</DropdownMenuItem>
+                              <DropdownMenuItem>Workflow engine</DropdownMenuItem>
+                              <DropdownMenuItem>Data processor</DropdownMenuItem>
+                              <DropdownMenuItem>Analytics engine</DropdownMenuItem>
+                            </DropdownMenuSubContent>
+                          </DropdownMenuSub>
+                          
+                          {/* Template tags */}
+                          <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>
+                              <span>Template tags</span>
+                            </DropdownMenuSubTrigger>
+                            <DropdownMenuSubContent>
+                              <DropdownMenuItem>Contact name</DropdownMenuItem>
+                              <DropdownMenuItem>Company name</DropdownMenuItem>
+                              <DropdownMenuItem>Email address</DropdownMenuItem>
+                              <DropdownMenuItem>Phone number</DropdownMenuItem>
+                              <DropdownMenuItem>Custom field</DropdownMenuItem>
+                            </DropdownMenuSubContent>
+                          </DropdownMenuSub>
+                          
+                          {/* Widgets */}
+                          <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>
+                              <span>Widgets</span>
+                            </DropdownMenuSubTrigger>
+                            <DropdownMenuSubContent>
+                              <DropdownMenuItem>Chat widget</DropdownMenuItem>
+                              <DropdownMenuItem>Contact form</DropdownMenuItem>
+                              <DropdownMenuItem>FAQ widget</DropdownMenuItem>
+                              <DropdownMenuItem>Booking calendar</DropdownMenuItem>
+                            </DropdownMenuSubContent>
+                          </DropdownMenuSub>
+                          
+                          {/* Channels */}
+                          <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>
+                              <span>Channels</span>
+                            </DropdownMenuSubTrigger>
+                            <DropdownMenuSubContent>
+                              <DropdownMenuItem>Email</DropdownMenuItem>
+                              <DropdownMenuItem>SMS</DropdownMenuItem>
+                              <DropdownMenuItem>WhatsApp</DropdownMenuItem>
+                              <DropdownMenuItem>Facebook Messenger</DropdownMenuItem>
+                              <DropdownMenuItem>Slack</DropdownMenuItem>
+                            </DropdownMenuSubContent>
+                          </DropdownMenuSub>
+                          
+                          {/* Knowledge base */}
+                          <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>
+                              <span>Knowledge base</span>
+                            </DropdownMenuSubTrigger>
+                            <DropdownMenuSubContent>
+                              <DropdownMenuItem>FAQ articles</DropdownMenuItem>
+                              <DropdownMenuItem>Product guides</DropdownMenuItem>
+                              <DropdownMenuItem>Troubleshooting</DropdownMenuItem>
+                              <DropdownMenuItem>Best practices</DropdownMenuItem>
+                            </DropdownMenuSubContent>
+                          </DropdownMenuSub>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
 
                       <Tooltip>
                         <TooltipTrigger asChild>
-
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="iconSm">
-                            <PlusCircle className="h-4 w-4" />
+                          <Button 
+                            variant="ghost" 
+                            size="iconSm"
+                            onClick={() => {
+                              setShowAgentMention(true)
+                              setAgentMentionQuery("")
+                              // Position the menu near the button
+                              const button = document.querySelector('[data-agent-button]')
+                              if (button) {
+                                const rect = button.getBoundingClientRect()
+                                setSlashMenuPosition({
+                                  top: rect.bottom + 5,
+                                  left: rect.left
+                                })
+                              }
+                            }}
+                            data-agent-button
+                          >
+                            <AtSign className="h-4 w-4" />
                           </Button>
-                        </DropdownMenuTrigger>
-
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Insert a command</p>
+                          <p>Mention an AI agent</p>
                         </TooltipContent>
                       </Tooltip>
-                      
-                      <DropdownMenuContent className="w-64" align="start">
-                        <DropdownMenuLabel>Insert</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        
-                        {/* Tools */}
-                        <DropdownMenuSub>
-                          <DropdownMenuSubTrigger>
-                            <span>Tools</span>
-                          </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent>
-                            <DropdownMenuItem>AI assistant</DropdownMenuItem>
-                            <DropdownMenuItem>Workflow engine</DropdownMenuItem>
-                            <DropdownMenuItem>Data processor</DropdownMenuItem>
-                            <DropdownMenuItem>Analytics engine</DropdownMenuItem>
-                          </DropdownMenuSubContent>
-                        </DropdownMenuSub>
-                        
-                        {/* Template tags */}
-                        <DropdownMenuSub>
-                          <DropdownMenuSubTrigger>
-                            <span>Template tags</span>
-                          </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent>
-                            <DropdownMenuItem>Contact name</DropdownMenuItem>
-                            <DropdownMenuItem>Company name</DropdownMenuItem>
-                            <DropdownMenuItem>Email address</DropdownMenuItem>
-                            <DropdownMenuItem>Phone number</DropdownMenuItem>
-                            <DropdownMenuItem>Custom field</DropdownMenuItem>
-                          </DropdownMenuSubContent>
-                        </DropdownMenuSub>
-                        
-                        {/* Widgets */}
-                        <DropdownMenuSub>
-                          <DropdownMenuSubTrigger>
-                            <span>Widgets</span>
-                          </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent>
-                            <DropdownMenuItem>Chat widget</DropdownMenuItem>
-                            <DropdownMenuItem>Contact form</DropdownMenuItem>
-                            <DropdownMenuItem>FAQ widget</DropdownMenuItem>
-                            <DropdownMenuItem>Booking calendar</DropdownMenuItem>
-                          </DropdownMenuSubContent>
-                        </DropdownMenuSub>
-                        
-                        {/* Channels */}
-                        <DropdownMenuSub>
-                          <DropdownMenuSubTrigger>
-                            <span>Channels</span>
-                          </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent>
-                            <DropdownMenuItem>Email</DropdownMenuItem>
-                            <DropdownMenuItem>SMS</DropdownMenuItem>
-                            <DropdownMenuItem>WhatsApp</DropdownMenuItem>
-                            <DropdownMenuItem>Facebook Messenger</DropdownMenuItem>
-                            <DropdownMenuItem>Slack</DropdownMenuItem>
-                          </DropdownMenuSubContent>
-                        </DropdownMenuSub>
-                        
-                        {/* Knowledge base */}
-                        <DropdownMenuSub>
-                          <DropdownMenuSubTrigger>
-                            <span>Knowledge base</span>
-                          </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent>
-                            <DropdownMenuItem>FAQ articles</DropdownMenuItem>
-                            <DropdownMenuItem>Product guides</DropdownMenuItem>
-                            <DropdownMenuItem>Troubleshooting</DropdownMenuItem>
-                            <DropdownMenuItem>Best practices</DropdownMenuItem>
-                          </DropdownMenuSubContent>
-                        </DropdownMenuSub>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    </div>
                     
                     <span className="text-xs text-muted-foreground">
-                      Type <span className="font-semibold py-0.5 px-2 bg-gray-100 border border-gray-200 rounded-sm">/</span> to insert commands
+                      Type <span className="font-semibold py-0.5 px-2 bg-gray-100 border border-gray-200 rounded-sm">/</span> for commands, <span className="font-semibold py-0.5 px-2 bg-gray-100 border border-gray-200 rounded-sm">@</span> to mention agents
                     </span>
                   </div>
                  </div>
               </div>
               
-              {/* Prompt Tips */}
-              <div className="bg-muted/50 rounded-lg p-4">
-                <h4 className="font-medium text-sm mb-2">💡 Prompt writing tips</h4>
-                <ul className="text-xs text-muted-foreground space-y-1">
-                  <li>• Be specific about the agent&apos;s role and responsibilities</li>
-                  <li>• Include examples of good responses</li>
-                  <li>• Set clear boundaries and limitations</li>
-                  <li>• Specify the tone and personality you want</li>
-                  <li>• Mention how to handle edge cases or escalations</li>
-                </ul>
+              {/* Generate Prompt Button */}
+              <div className="mt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    // TODO: Implement prompt generation logic
+                    console.log("Generate enhanced prompt from simple input")
+                  }}
+                >
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Generate full prompt
+                </Button>
               </div>
+              
+              {/* Prompt Tips */}
+              {showPromptTips && (
+                <div className="bg-muted/50 rounded-lg p-4 relative">
+                  <button
+                    onClick={() => setShowPromptTips(false)}
+                    className="absolute top-2 right-2 p-1 hover:bg-gray-200 rounded-sm transition-colors"
+                    aria-label="Close prompt tips"
+                  >
+                    <X className="h-4 w-4 text-gray-500" />
+                  </button>
+                  <h4 className="font-medium text-sm mb-2 pr-6">💡 Prompt writing tips</h4>
+                  <ul className="text-xs text-muted-foreground space-y-1">
+                    <li>• Be specific about the agent&apos;s role and responsibilities</li>
+                    <li>• Include examples of good responses</li>
+                    <li>• Set clear boundaries and limitations</li>
+                    <li>• Specify the tone and personality you want</li>
+                    <li>• Mention how to handle edge cases or escalations</li>
+                  </ul>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
