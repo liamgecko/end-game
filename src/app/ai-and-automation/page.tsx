@@ -11,21 +11,19 @@ import {
   getPaginationRowModel,
   VisibilityState,
 } from "@tanstack/react-table"
-import { MoreHorizontal, Play, Pause, Settings, Trash2, Plus } from "lucide-react"
+import { MoreHorizontal, Play, Pause, Settings, Trash2, Plus, Bot, Sparkles } from "lucide-react"
 import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
 import {
   Table,
   TableBody,
@@ -182,7 +180,7 @@ const columns: ColumnDef<AIAgent>[] = [
           </div>
           <div>
             <p>{createdBy.name}</p>
-            <p className="text-sm text-muted-foreground">{createdBy.dateCreated}</p>
+            <p className="text-xs text-muted-foreground">{createdBy.dateCreated}</p>
           </div>
         </div>
       )
@@ -260,12 +258,30 @@ export default function AIAndAutomationPage() {
             Manage AI agents, workflows, and automation rules to streamline your operations.
           </p>
         </div>
-        <Link href="/ai-and-automation/create">
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Add new AI agent
-          </Button>
-        </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add new AI agent
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Choose creation method</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/ai-and-automation/create" className="flex items-center gap-2">
+                <Bot className="h-4 w-4" />
+                Prompt commands builder
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/ai-and-automation/create-conditions" className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
+                Prompt conditions builder
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
 

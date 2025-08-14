@@ -17,7 +17,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Save, Bot, Play, Sparkles, PlusCircle, Tag, Square, MessageSquare, BookOpen, Pencil, PenLine, Shapes } from "lucide-react"
+import { Save, Bot, Play, Sparkles, PlusCircle, PenLine, Shapes } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
